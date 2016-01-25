@@ -31,6 +31,7 @@ add_library(${PROJECT_NAME}
   src/joint_velocity_controller.cpp
   src/joint_position_controller.cpp
   src/joint_group_effort_controller.cpp
+  src/joint_group_position_controller.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
