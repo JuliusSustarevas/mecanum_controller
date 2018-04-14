@@ -79,8 +79,8 @@ if(CATKIN_ENABLE_TESTING)
   target_link_libraries(init_joint_trajectory_test ${catkin_LIBRARIES})
 
   add_rostest_gtest(tolerances_test
-                  test/tolerances.test
-                  test/tolerances_test.cpp)
+                    test/tolerances.test
+                    test/tolerances_test.cpp)
   target_link_libraries(tolerances_test ${catkin_LIBRARIES})
 
   add_executable(rrbot test/rrbot.cpp)
