@@ -291,27 +291,49 @@ bool MecanumDriveController::setWheelParamsFromUrdf(ros::NodeHandle& root_nh, co
     return false;
   }
 
-  ROS_INFO_STREAM("wheel0 to origin: " << wheel0_urdfJoint->parent_to_joint_origin_transform.position.x << ","
-                                       << wheel0_urdfJoint->parent_to_joint_origin_transform.position.y << ", "
-                                       << wheel0_urdfJoint->parent_to_joint_origin_transform.position.z);
-  ROS_INFO_STREAM("wheel1 to origin: " << wheel1_urdfJoint->parent_to_joint_origin_transform.position.x << ","
-                                       << wheel1_urdfJoint->parent_to_joint_origin_transform.position.y << ", "
-                                       << wheel1_urdfJoint->parent_to_joint_origin_transform.position.z);
-  ROS_INFO_STREAM("wheel2 to origin: " << wheel2_urdfJoint->parent_to_joint_origin_transform.position.x << ","
-                                       << wheel2_urdfJoint->parent_to_joint_origin_transform.position.y << ", "
-                                       << wheel2_urdfJoint->parent_to_joint_origin_transform.position.z);
-  ROS_INFO_STREAM("wheel3 to origin: " << wheel3_urdfJoint->parent_to_joint_origin_transform.position.x << ","
-                                       << wheel3_urdfJoint->parent_to_joint_origin_transform.position.y << ", "
-                                       << wheel3_urdfJoint->parent_to_joint_origin_transform.position.z);
+  // ROS_INFO_STREAM("wheel0 to origin: " << wheel0_urdfJoint->parent_to_joint_origin_transform.position.x << ","
+  //                                      << wheel0_urdfJoint->parent_to_joint_origin_transform.position.y << ", "
+  //                                      << wheel0_urdfJoint->parent_to_joint_origin_transform.position.z);
+  // ROS_INFO_STREAM("wheel1 to origin: " << wheel1_urdfJoint->parent_to_joint_origin_transform.position.x << ","
+  //                                      << wheel1_urdfJoint->parent_to_joint_origin_transform.position.y << ", "
+  //                                      << wheel1_urdfJoint->parent_to_joint_origin_transform.position.z);
+  // ROS_INFO_STREAM("wheel2 to origin: " << wheel2_urdfJoint->parent_to_joint_origin_transform.position.x << ","
+  //                                      << wheel2_urdfJoint->parent_to_joint_origin_transform.position.y << ", "
+  //                                      << wheel2_urdfJoint->parent_to_joint_origin_transform.position.z);
+  // ROS_INFO_STREAM("wheel3 to origin: " << wheel3_urdfJoint->parent_to_joint_origin_transform.position.x << ","
+  //                                      << wheel3_urdfJoint->parent_to_joint_origin_transform.position.y << ", "
+  //                                      << wheel3_urdfJoint->parent_to_joint_origin_transform.position.z);
 
-  double wheel0_x = wheel0_urdfJoint->parent_to_joint_origin_transform.position.x;
-  double wheel0_y = wheel0_urdfJoint->parent_to_joint_origin_transform.position.y;
-  double wheel1_x = wheel1_urdfJoint->parent_to_joint_origin_transform.position.x;
-  double wheel1_y = wheel1_urdfJoint->parent_to_joint_origin_transform.position.y;
-  double wheel2_x = wheel2_urdfJoint->parent_to_joint_origin_transform.position.x;
-  double wheel2_y = wheel2_urdfJoint->parent_to_joint_origin_transform.position.y;
-  double wheel3_x = wheel3_urdfJoint->parent_to_joint_origin_transform.position.x;
-  double wheel3_y = wheel3_urdfJoint->parent_to_joint_origin_transform.position.y;
+  // double wheel0_x = wheel0_urdfJoint->parent_to_joint_origin_transform.position.x;
+  // double wheel0_y = wheel0_urdfJoint->parent_to_joint_origin_transform.position.y;
+  // double wheel1_x = wheel1_urdfJoint->parent_to_joint_origin_transform.position.x;
+  // double wheel1_y = wheel1_urdfJoint->parent_to_joint_origin_transform.position.y;
+  // double wheel2_x = wheel2_urdfJoint->parent_to_joint_origin_transform.position.x;
+  // double wheel2_y = wheel2_urdfJoint->parent_to_joint_origin_transform.position.y;
+  // double wheel3_x = wheel3_urdfJoint->parent_to_joint_origin_transform.position.x;
+  // double wheel3_y = wheel3_urdfJoint->parent_to_joint_origin_transform.position.y;
+
+  double wheel0_x;
+  double wheel0_y;
+  double wheel1_x;
+  double wheel1_y;
+  double wheel2_x;
+  double wheel2_y;
+  double wheel3_x;
+  double wheel3_y;
+
+
+  root_nh.getParam("wheel0_x", wheel0_x);
+  root_nh.getParam("wheel0_y", wheel0_y);
+  root_nh.getParam("wheel1_x", wheel1_x);
+  root_nh.getParam("wheel1_y", wheel1_y);
+  root_nh.getParam("wheel2_x", wheel2_x);
+  root_nh.getParam("wheel2_y", wheel2_y);
+  root_nh.getParam("wheel3_x", wheel3_x);
+  root_nh.getParam("wheel3_y", wheel3_y);
+
+
+
 
   wheels_k_ = (-(-wheel0_x - wheel0_y) - (wheel1_x - wheel1_y) + (-wheel2_x - wheel2_y) + (wheel3_x - wheel3_y)) / 4.0;
 
