@@ -1,3 +1,12 @@
+# About
+This is a fork from  https://github.com/bmagyar/ros_controllers
+
+## Changes
+- Removed URDF lookups for various wheel displacement values, wheel diameter etc. Rationale - I am not a fan of urdf lookups. Explicit controller parameters allow a certain decoupling between urdf and controllers. They help with readability and explicit specificity. Instead of your whole robot being linked in invisible ways - you know exactly what values go where. 
+- (TODO) Add back the velocity, acceleration 
+
+# Original Readme
+
 --- MECANUM DRIVE CONTROLLER ---
 
 
