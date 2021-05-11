@@ -125,14 +125,9 @@ private:
 
   /**
    * \brief Sets odometry parameters from the URDF, i.e. the wheel radius and separation
-   * \param root_nh Root node handle
-   * \param wheel0_name Name of wheel0 joint
-   * \param wheel1_name Name of wheel1 joint
-   * \param wheel2_name Name of wheel2 joint
-   * \param wheel3_name Name of wheel3 joint
+   * \param root_nh Root node handle  
    */
-  bool setWheelParams(ros::NodeHandle& root_nh, const std::string& wheel0_name, const std::string& wheel1_name,
-                              const std::string& wheel2_name, const std::string& wheel3_name);
+  bool setWheelParams(ros::NodeHandle& root_nh);
  
   /**
    * \brief Sets the odometry publishing fields

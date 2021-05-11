@@ -20,19 +20,19 @@ namespace mecanum_drive_controller
 
     // Get joint names from the parameter server
     std::string wheel0_name;
-    controller_nh.param("front_left_wheel_joint", wheel0_name, wheel0_name);
+    controller_nh.param("wheels/fl/name", wheel0_name, wheel0_name);    
     ROS_INFO_STREAM_NAMED(name_, "Front left wheel joint (wheel0) is : " << wheel0_name);
 
     std::string wheel1_name;
-    controller_nh.param("back_left_wheel_joint", wheel1_name, wheel1_name);
+    controller_nh.param("wheels/bl/name", wheel1_name, wheel1_name);
     ROS_INFO_STREAM_NAMED(name_, "Back left wheel joint (wheel1) is : " << wheel1_name);
 
     std::string wheel2_name;
-    controller_nh.param("back_right_wheel_joint", wheel2_name, wheel2_name);
+    controller_nh.param("wheels/br/name", wheel2_name, wheel2_name);
     ROS_INFO_STREAM_NAMED(name_, "Back right wheel joint (wheel2) is : " << wheel2_name);
 
     std::string wheel3_name;
-    controller_nh.param("front_right_wheel_joint", wheel3_name, wheel3_name);
+    controller_nh.param("wheels/fr/name", wheel3_name, wheel3_name);
     ROS_INFO_STREAM_NAMED(name_, "Front right wheel joint (wheel3) is : " << wheel3_name);
 
     // Odometry related:
@@ -108,7 +108,7 @@ namespace mecanum_drive_controller
     wheel3_jointHandle_ = hw->getHandle(wheel3_name); // throws on failure
 
     // Pass params through and setup publishers and subscribers
-    if (!setWheelParams(root_nh, wheel0_name, wheel1_name, wheel2_name, wheel3_name))
+    if (!setWheelParams(controller_nh))
       return false;
 
     setupRealtimePublishersMsg(root_nh, controller_nh);
@@ -283,35 +283,37 @@ namespace mecanum_drive_controller
     }
   }
 
-  bool MecanumDriveController::setWheelParams(ros::NodeHandle &root_nh, const std::string &wheel0_name,
-                                              const std::string &wheel1_name, const std::string &wheel2_name,
-                                              const std::string &wheel3_name)
+  bool MecanumDriveController::setWheelParams(ros::NodeHandle &controller_nh)
   {
-    double wheel0_x;
-    double wheel0_y;
-    double wheel1_x;
-    double wheel1_y;
-    double wheel2_x;
-    double wheel2_y;
-    double wheel3_x;
-    double wheel3_y;
+    double wheel0_x = 0.0;
+    double wheel0_y = 0.0;
+    double wheel1_x = 0.0;
+    double wheel1_y = 0.0;
+    double wheel2_x = 0.0;
+    double wheel2_y = 0.0;
+    double wheel3_x = 0.0;
+    double wheel3_y = 0.0;
 
     double wheel0_radius = 0.0;
     double wheel1_radius = 0.0;
     double wheel2_radius = 0.0;
     double wheel3_radius = 0.0;
 
-    root_nh.getParam("wheels/fl/x", wheel0_x);
-    root_nh.getParam("wheels/fl/y", wheel0_y);
-    root_nh.getParam("wheels/bl/x", wheel1_x);
-    root_nh.getParam("wheels/bl/y", wheel1_y);
-    root_nh.getParam("wheels/br/x", wheel2_x);
-    root_nh.getParam("wheels/br/y", wheel2_y);
-    root_nh.getParam("wheels/fr/x", wheel3_x);
-    root_nh.getParam("wheels/fr/y", wheel3_y);
-    root_nh.getParam("wheels/r", wheels_radius_);
+    controller_nh.getParam("wheels/fl/x", wheel0_x);
+    controller_nh.getParam("wheels/fl/y", wheel0_y);
+    controller_nh.getParam("wheels/bl/x", wheel1_x);
+    controller_nh.getParam("wheels/bl/y", wheel1_y);
+    controller_nh.getParam("wheels/br/x", wheel2_x);
+    controller_nh.getParam("wheels/br/y", wheel2_y);
+    controller_nh.getParam("wheels/fr/x", wheel3_x);
+    controller_nh.getParam("wheels/fr/y", wheel3_y);
+    controller_nh.getParam("wheels/r", wheels_radius_);
 
     wheels_k_ = (-(-wheel0_x - wheel0_y) - (wheel1_x - wheel1_y) + (-wheel2_x - wheel2_y) + (wheel3_x - wheel3_y)) / 4.0;
+
+    if (wheels_k_>1000){
+      ROS_FATAL("wheels_k_ not reasonable value");
+    }
 
     ROS_INFO_STREAM("wheels_k: " << wheels_k_);
     ROS_INFO_STREAM("Wheel radius: " << wheels_radius_);
