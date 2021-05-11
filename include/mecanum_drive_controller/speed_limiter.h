@@ -39,7 +39,7 @@
 #pragma once
 
 
-namespace diff_drive_controller
+namespace mecanum_drive_controller
 {
 
   class SpeedLimiter
@@ -126,4 +126,4 @@ namespace diff_drive_controller
     double max_jerk;
   };
 
-} // namespace diff_drive_controller
+} // namespace mecanum_drive_controller

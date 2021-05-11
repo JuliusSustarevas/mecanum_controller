@@ -7,11 +7,13 @@
 #include <pluginlib/class_list_macros.h>
 
 #include <nav_msgs/Odometry.h>
+#include <geometry_msgs/TwistStamped.h>
 #include <tf/tfMessage.h>
 
 #include <realtime_tools/realtime_buffer.h>
 #include <realtime_tools/realtime_publisher.h>
 
+#include <mecanum_drive_controller/speed_limiter.h>
 #include <mecanum_drive_controller/odometry.h>
 
 namespace mecanum_drive_controller
@@ -76,17 +78,18 @@ private:
 
   /// Odometry related:
   Odometry odometry_;
+  std::string odom_frame_id_;  
 
   std::shared_ptr<realtime_tools::RealtimePublisher<nav_msgs::Odometry> > odom_pub_;
   std::shared_ptr<realtime_tools::RealtimePublisher<tf::tfMessage> > tf_pub_;
+  std::shared_ptr<realtime_tools::RealtimePublisher<geometry_msgs::TwistStamped> > cmd_vel_pub_;
 
   geometry_msgs::TransformStamped odom_frame_;
 
   ros::Duration publish_period_;
   ros::Time last_state_publish_time_;
 
-  /// Wheel radius (assuming it's the same for the left and right wheels):
-  bool use_realigned_roller_joints_;
+  /// Wheel radius (assuming it's the same for the left and right wheels): 
   double wheels_k_;  // wheels geometric param used in mecanum wheels' ik
   double wheels_radius_;
 
@@ -95,13 +98,18 @@ private:
 
   /// Frame to use for the robot base:
   std::string base_frame_id_;
-  double base_frame_offset_[PLANAR_POINT_DIM];
+  double base_frame_offset_[PLANAR_POINT_DIM];  
 
   /// Whether to publish odometry to tf or not:
   bool enable_odom_tf_;
 
-  /// Number of wheel joints:
-  size_t wheel_joints_size_;
+  /// Speed limiters:
+  Command last1_cmd_;
+  Command last0_cmd_;
+  SpeedLimiter limiter_lin_x_;
+  SpeedLimiter limiter_lin_y_;
+  SpeedLimiter limiter_ang_;  
+  bool publish_cmd_;
 
 private:
   /**
@@ -123,18 +131,9 @@ private:
    * \param wheel2_name Name of wheel2 joint
    * \param wheel3_name Name of wheel3 joint
    */
-  bool setWheelParamsFromUrdf(ros::NodeHandle& root_nh, const std::string& wheel0_name, const std::string& wheel1_name,
+  bool setWheelParams(ros::NodeHandle& root_nh, const std::string& wheel0_name, const std::string& wheel1_name,
                               const std::string& wheel2_name, const std::string& wheel3_name);
-
-  /**
-   * \brief Get the radius of a given wheel
-   * \param       model         urdf model used
-   * \param       wheel_link    link of the wheel from which to get the radius
-   * \param[out]  wheels_radius radius of the wheel read from the urdf
-   */
-  bool getWheelRadius(const urdf::ModelInterfaceSharedPtr& model, const urdf::LinkConstSharedPtr& wheel_link,
-                      double& wheel_radius);
-
+ 
   /**
    * \brief Sets the odometry publishing fields
    * \param root_nh Root node handle
